@@ -7,8 +7,10 @@
     dest: /home/centos/flaskr
     force: yes
 
-- name: Change directory
-  shell: cd /home/centos/flaskr
+    #- pip:
+    #chdir: /home/centos/flaskr
+    #requirements: requirements.txt
+    #virtualenv_python: venv
 
 - name: Create virtual environment
   command: python3 -m venv venv
@@ -16,14 +18,34 @@
   args:
     chdir: /home/centos/flaskr
 
-- name: Activate venv
-  shell: . venv/bin/activate
+    #- name: Activate venv
+    #command: . venv/bin/activate
+    #args:
+    #chdir: /home/centos/flaskr
 
 - name: Install requirements
-  shell: pip install -r requirements.txt
+  command: pip install -r requirements.txt
+  become: yes
+  args:
+    chdir: /home/centos/flaskr
+
+- name: Export LC_ALL
+  shell: export LC_ALL=en_US.UTF-8
+
+- name: Export FLASK_APP
+  shell: "echo $FLASK_APP"
+  environment:
+    FLASK_APP: export FLASK_APP=flaskr
+
+- name: Export FLASK_ENV
+  shell: "echo $FLASK_ENV"
+  environment:
+    FLASK_ENV: export FLASK_ENV=development
 
 - name: Init db
-  shell: "flask init-db"
+  command: "flask init-db"
+  args:
+    chdir: /home/centos/flaskr
 
 - name: Start services
   become: yes
@@ -39,3 +61,4 @@
   become: yes
   systemd:
     daemon_reload: yes
+
