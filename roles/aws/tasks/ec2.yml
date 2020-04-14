@@ -1,0 +1,49 @@
+---
+- name: Create ec2 instance
+  ec2:
+    key_name: "{{ keypair }}"
+    group: "{{ secgroup_data.group_name }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    wait: True
+    region: "{{ aws_region }}"
+    vpc_subnet_id: "{{ subnet_data.subnet.id }}"
+    assign_public_ip: no
+    exact_count: 1
+    count_tag:
+      Name: "{{ ec2_instance_name }} "
+    instance_tags:
+      Name: "{{ ec2_instance_name }} "
+  register: ec2
+
+- name: Print ec2 instance data
+  debug:
+    msg: "{{ ec2 }}"
+
+- name: Create and associate elastic IP
+  ec2_eip:
+    device_id: "{{ ec2.tagged_instances[0].id }}"
+    reuse_existing_ip_allowed: true
+    release_on_disassociation: true
+    region: "{{ aws_region }}"
+    in_vpc: true
+  register: ip
+
+- name: Print IP
+  debug:
+    msg: "{{ ip }}"
+
+- name: Wait for server
+  wait_for:
+    host: "{{ ip.public_ip }}"
+
+- name: Refresh inventory
+  meta: refresh_inventory
+
+  #- name: Wait 10 seconds
+  #wait_for:
+  #  delay: 10
+
+
+
+

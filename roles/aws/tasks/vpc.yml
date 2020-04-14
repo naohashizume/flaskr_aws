@@ -1,0 +1,82 @@
+---
+- name: create VPC
+  ec2_vpc_net:
+    state: present
+    cidr_block: "{{ vpc_cidr }}"
+    region: "{{ aws_region }}"
+    multi_ok: no
+    name: "{{ vpc_prefix }}_VPC"
+  register: vpc_data
+
+- name: Provision subnet
+  ec2_vpc_subnet:
+    state: present
+    region: "{{ aws_region }}"
+    az: "{{ aws_az }}"
+    cidr: "{{ vpc_subnet_cidr }}"
+    vpc_id: "{{ vpc_data.vpc.id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_subnet"
+  register: subnet_data
+  when: vpc_data is defined
+
+- name: Print subnet data
+  debug:
+    msg: "{{ subnet_data }}"
+
+- name: Add gateway to VPC
+  ec2_vpc_igw:
+    region: "{{ aws_region }}"
+    state: present
+    vpc_id: "{{ vpc_data.vpc.id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_igw"
+  register: igw_data
+
+- name: Print gateway data
+  debug:
+    msg: "{{ igw_data }}"
+
+- name: Add route table
+  ec2_vpc_route_table:
+    region: "{{ aws_region }}"
+    state: present
+    vpc_id: "{{ vpc_data.vpc.id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_route_table"
+    subnets:
+      - "{{ subnet_data.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw_data.gateway_id }}"
+  register: route_table
+
+- name: Create ec2 security group
+  ec2_group:
+    name: EC2 Security group
+    description: EC2 group
+    vpc_id: "{{ vpc_data.vpc.id }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        ports:
+          - 22
+          - 80
+        cidr_ip: 0.0.0.0/0
+  register: secgroup_data
+
+- name: Print security group data
+  debug:
+    msg: "{{ secgroup_data }}"
+
+
+
+
+
+
+
+
+
+
+
+

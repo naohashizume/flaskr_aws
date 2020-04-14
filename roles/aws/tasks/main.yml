@@ -1,0 +1,22 @@
+---
+- name: Run VPC.yml
+  import_tasks: vpc.yml
+  tags:
+    - provision
+
+- name: Run ec2.yml
+  import_tasks: ec2.yml
+  tags:
+    - provision
+
+- name: Info
+  import_tasks: info.yml
+  tags:
+    - info
+    - cleanup
+
+- name: Clean up
+  import_tasks: cleanup.yml
+  tags:
+    - never
+    - cleanup

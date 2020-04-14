@@ -1,0 +1,20 @@
+---
+- name: Install nginx
+  become: yes
+  package:
+    name:
+      - nginx
+
+- name: Move nginx file
+  become: yes
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: nginx
+    
+- name: Start and enable nginx
+  become: yes
+  systemd:
+    name: nginx
+    #state: started
+    enabled: yes

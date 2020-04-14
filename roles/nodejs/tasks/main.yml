@@ -1,0 +1,13 @@
+---
+- name: Install epel-release
+  become: yes
+  package:
+    name:
+      - epel-release
+
+- name: Install nodejs and NPM
+  become: yes
+  package:
+    name:
+      - nodejs
+      - npm

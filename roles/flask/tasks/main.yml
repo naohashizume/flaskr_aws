@@ -1,0 +1,55 @@
+---
+- name: Clone flask tutorial
+  become: yes
+  git:
+    clone: yes
+    repo: "https://github.com/naohashizume/flaskr.git"
+    dest: /home/centos/flaskr
+    force: yes
+
+    #- pip:
+    #chdir: /home/centos/flaskr
+    #requirements: requirements.txt
+    #virtualenv_python: venv
+
+- name: Change dirs
+  shell: cd /home/centos/flaskr
+
+- name: aa
+  shell: ls
+  register: output
+
+- name: debug
+  debug:
+    msg: "{{ output }}"
+
+- name: Create virtual environment
+  command: python3 -m venv venv
+  become: yes
+  args:
+    chdir: /home/centos/flaskr
+
+- name: Activate venv
+  shell: . venv/bin/activate
+
+- name: Install requirements
+  shell: pip install -r requirements.txt
+
+- name: Init db
+  shell: "flask init-db"
+
+- name: Start services
+  become: yes
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+    - nginx
+    - todoapp
+
+- name: Reload system
+  become: yes
+  systemd:
+    daemon_reload: yes
+

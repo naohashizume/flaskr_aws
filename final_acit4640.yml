@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  roles:
+    - aws
+  
+- hosts: aws_ec2
+  gather_facts: False
+  vars:
+    admin_user_name: admin
+    todoapp_user_name: todoapp
+    todoapp_port: 8080
+    todoapp_path: /home/todoapp/app/public
+  roles:
+    - flask
+  tags:
+    - deployment

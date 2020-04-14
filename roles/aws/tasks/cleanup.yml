@@ -1,0 +1,77 @@
+---
+
+- name: Release elastic IP
+  ec2_eip:
+    device_id: "{{ instance_facts.instances[0].instance_id }}"
+    region: "{{ aws_region }}"
+    release_on_disassociation: yes
+    state: absent
+
+- name: Remove ec2 instance
+  ec2:
+    region: "{{ aws_region }}"
+    instance_ids: "{{ instance_facts.instances[0].instance_id }}"
+    state: absent
+
+- name: Remove route table
+  ec2_vpc_route_table:
+    region: "{{ aws_region }}"
+    state: absent
+    vpc_id: "{{ instance_facts.instances[0].vpc_id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_route_table"
+     
+- name: Get default route table info
+  ec2_vpc_route_table_facts:
+    region: "{{ aws_region }}"
+  register: route
+
+- debug:
+    msg: "{{ route }}"
+
+- name: Remove default route table
+  ec2_vpc_route_table:
+    region: "{{ aws_region }}"
+    state: absent
+    route_table_id: "{{ route.route_tables[0].id }}"
+    vpc_id: "{{ route.route_tables[0].vpc_id }}"
+
+- name: Remove gateway from VPC
+  ec2_vpc_igw:
+    region: "{{ aws_region }}"
+    state: absent
+    vpc_id: "{{ instance_facts.instances[0].vpc_id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_igw"
+
+- pause:
+    seconds: 80
+
+- name: Delete ec2 security group
+  ec2_group:
+    name: EC2 Security group
+    group_id: "{{ instance_facts.instances[0].security_groups[0].group_id }}"
+    vpc_id: "{{ instance_facts.instances[0].vpc_id }}"
+    region: "{{ aws_region }}"
+    state: absent
+
+- name: Remove subnet
+  ec2_vpc_subnet:
+    state: absent
+    region: "{{ aws_region }}"
+    az: "{{ aws_az }}"
+    cidr: "{{ vpc_subnet_cidr }}"
+    vpc_id: "{{ instance_facts.instances[0].vpc_id }}"
+    tags:
+      Name: "{{ vpc_prefix }}_subnet"
+
+- pause:
+    seconds: 30
+
+- name: Remove VPC
+  ec2_vpc_net:
+    name: "{{ vpc_prefix }}_VPC"
+    region: "{{ aws_region }}"
+    state: absent
+    cidr_block: "{{ vpc_cidr }}"
+    purge_cidrs: yes

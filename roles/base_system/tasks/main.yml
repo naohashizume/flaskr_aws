@@ -1,0 +1,18 @@
+---
+- name: Disable SELinux
+  become: yes
+  selinux:
+    state: disabled
+
+- name: Install epel
+  become: yes
+  package:
+    name: epel-release
+
+- name: Install packages
+  become: yes
+  package:
+    name:
+      - python3
+      - git
+      - python-pip
