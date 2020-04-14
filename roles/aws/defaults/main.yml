@@ -7,4 +7,4 @@ vpc_subnet_cidr: 10.46.10.0/24
 keypair: aws_private_key
 instance_type: t2.micro
 image: ami-01ed306a12b7d1c96
-ec2_instance_name: todo_app
+ec2_instance_name: flaskr_app
