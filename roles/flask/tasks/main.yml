@@ -33,14 +33,22 @@
   shell: export LC_ALL=en_US.UTF-8
 
 - name: Export FLASK_APP
-  shell: "echo $FLASK_APP"
-  environment:
-    FLASK_APP: export FLASK_APP=flaskr
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export FLASK_APP=flaskr
+    create: yes
 
 - name: Export FLASK_ENV
-  shell: "echo $FLASK_ENV"
-  environment:
-    FLASK_ENV: export FLASK_ENV=development
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export FLASK_ENV=development
+    create: yes
+
+- name:
+  become: yes
+  shell: source /etc/environment
 
 - name: Init db
   command: "flask init-db"
