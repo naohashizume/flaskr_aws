@@ -1,12 +1,29 @@
 ---
+- name: Export LC_ALL
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export LC_ALL=en_US.UTF-8
+
+- name: Export LANG
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export LANG=en_US.UTF-8
+
 - name: Export FLASK_APP
-  shell: "export FLASK_APP=flaskr"
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export FLASK_APP=flaskr
+    create: yes
 
 - name: Export FLASK_ENV
-  shell: "export FLASK_ENV=development"
-
-- name: Export LC_ALL
-  shell: export LC_ALL=en_US.UTF-8
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export FLASK_ENV=development
+    create: yes
 
 - name: Set up flaskr.service
   become: yes

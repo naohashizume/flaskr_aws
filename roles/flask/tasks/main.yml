@@ -19,50 +19,30 @@
     #- name: Create virtual environment
     #become: yes
     #command: python3 -m venv venv
+
   #  become: yes
   #args:
   #chdir: /home/centos/flaskr
 
-    #- name: Activate venv
-    #become: yes
-    #command: . venv/bin/activate
-    #args:
-    #chdir: /home/centos/flaskr
-
+  #- name: Activate venv
+  #become: yes
+  #command: . venv/bin/activate
+  #args:
+  #chdir: /home/centos/flaskr
 - name: Install requirements
   command: pip3 install -r requirements.txt
   become: yes
   args:
     chdir: /home/centos/flaskr
 
-- name: Export LC_ALL
-  become: yes
-  lineinfile:
-    path: /etc/environment
-    line: export LC_ALL=en_US.UTF-8
-
-- name: Export FLASK_APP
-  become: yes
-  lineinfile:
-    path: /etc/environment
-    line: export FLASK_APP=flaskr
-    create: yes
-
-- name: Export FLASK_ENV
-  become: yes
-  lineinfile:
-    path: /etc/environment
-    line: export FLASK_ENV=development
-    create: yes
-
 - name: Source environemnt
   become: yes
   shell: source /etc/environment
 
-- name: Init db
-  shell: flask init-db
-  args:
-    chdir: /home/centos/flaskr
+# - name: Init db
+#   shell: flask init-db
+#   args:
+#     chdir: /home/centos/flaskr
 
 - name: Reload system
   become: yes
@@ -78,4 +58,3 @@
   loop:
     - nginx
     - flaskr
-
