@@ -4,7 +4,7 @@
   selinux:
     state: disabled
 
-- name: Install epel
+- name: Install epel-release
   become: yes
   package:
     name: epel-release

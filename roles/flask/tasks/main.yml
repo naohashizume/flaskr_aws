@@ -1,5 +1,5 @@
 ---
-- name: Clone flask tutorial
+- name: Clone flask app
   become: yes
   git:
     clone: yes
@@ -7,21 +7,11 @@
     dest: /home/centos/flaskr
     force: yes
 
-    #- pip:
-    #chdir: /home/centos/flaskr
-    #requirements: requirements.txt
-    #virtualenv_python: venv
-
 - name: Create virtual environment
   command: python3 -m venv venv
   become: yes
   args:
     chdir: /home/centos/flaskr
-
-    #- name: Activate venv
-    #command: . venv/bin/activate
-    #args:
-    #chdir: /home/centos/flaskr
 
 - name: Install requirements
   command: pip install -r requirements.txt
@@ -55,6 +45,11 @@
   args:
     chdir: /home/centos/flaskr
 
+- name: Reload system
+  become: yes
+  systemd:
+    daemon_reload: yes
+
 - name: Start services
   become: yes
   systemd:
@@ -64,9 +59,3 @@
   loop:
     - nginx
     - flaskr
-
-- name: Reload system
-  become: yes
-  systemd:
-    daemon_reload: yes
-

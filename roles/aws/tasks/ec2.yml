@@ -33,17 +33,14 @@
   debug:
     msg: "{{ ip }}"
 
-- name: Wait for server
-  wait_for:
+- name: Wait until SSH is available
+  local_action:
+    module: wait_for
     host: "{{ ip.public_ip }}"
+    port: 22
+    delay: 60
+    timeout: 320
+    state: started
 
 - name: Refresh inventory
   meta: refresh_inventory
-
-  #- name: Wait 10 seconds
-  #wait_for:
-  #  delay: 10
-
-
-
-
