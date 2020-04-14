@@ -7,21 +7,8 @@
     dest: /home/centos/flaskr
     force: yes
 
-    #- pip:
-    #chdir: /home/centos/flaskr
-    #requirements: requirements.txt
-    #virtualenv_python: venv
-
-- name: Change dirs
+- name: Change directory
   shell: cd /home/centos/flaskr
-
-- name: aa
-  shell: ls
-  register: output
-
-- name: debug
-  debug:
-    msg: "{{ output }}"
 
 - name: Create virtual environment
   command: python3 -m venv venv
@@ -46,10 +33,9 @@
     enabled: yes
   loop:
     - nginx
-    - todoapp
+    - flaskr
 
 - name: Reload system
   become: yes
   systemd:
     daemon_reload: yes
-

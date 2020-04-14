@@ -1,5 +1,0 @@
----
-- name: import data
-  become: yes
-  command: mongorestore -d acit4640 /home/admin/ACIT4640
-

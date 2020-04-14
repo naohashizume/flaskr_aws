@@ -5,16 +5,15 @@
     name:
       - nginx
 
-- name: Move nginx file
+- name: Move nginx config
   become: yes
   template:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
     owner: nginx
-    
+
 - name: Start and enable nginx
   become: yes
   systemd:
     name: nginx
-    #state: started
     enabled: yes
