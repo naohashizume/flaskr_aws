@@ -1,5 +1,4 @@
 ---
-
 - name: Release elastic IP
   ec2_eip:
     device_id: "{{ instance_facts.instances[0].instance_id }}"
@@ -20,7 +19,7 @@
     vpc_id: "{{ instance_facts.instances[0].vpc_id }}"
     tags:
       Name: "{{ vpc_prefix }}_route_table"
-     
+
 - name: Get default route table info
   ec2_vpc_route_table_facts:
     region: "{{ aws_region }}"
@@ -45,7 +44,7 @@
       Name: "{{ vpc_prefix }}_igw"
 
 - pause:
-    seconds: 80
+    seconds: 60
 
 - name: Delete ec2 security group
   ec2_group:
