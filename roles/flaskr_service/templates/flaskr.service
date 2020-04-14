@@ -6,6 +6,7 @@ After=network.target
 WorkingDirectory={{ flaskr_path }}
 Type=simple
 User={{ flaskr_user }}
+Environment=FLASK_APP=flaskr
 ExecStartPre=/bin/bash -c 'flask init-db'
 ExecStart=/bin/bash -c 'flask run --host=0.0.0.0'
 Restart=always
