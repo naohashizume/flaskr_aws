@@ -19,19 +19,6 @@
   args:
     chdir: /home/centos/flaskr
 
-- name: Export LC_ALL
-  shell: export LC_ALL=en_US.UTF-8
-
-- name: Export FLASK_APP
-  shell: "echo $FLASK_APP"
-  environment:
-    FLASK_APP: export FLASK_APP=flaskr
-
-- name: Export FLASK_ENV
-  shell: "echo $FLASK_ENV"
-  environment:
-    FLASK_ENV: export FLASK_ENV=development
-
 - name: Init db
   command: "flask init-db"
   args:
