@@ -4,18 +4,3 @@
   template:
     src: flaskr.service
     dest: /etc/systemd/system
-
-- name: Export FLASK_APP
-  shell: "export FLASK_APP=flaskr"
-
-- name: Export FLASK_ENV
-  shell: "export FLASK_ENV=development"
-
-- name: Export LC_ALL
-  shell: "export LC_ALL=en_US.UTF-8"
-
-- name: Set up flaskr.service
-  become: yes
-  template:
-    src: flaskr.service
-    dest: /etc/systemd/system
