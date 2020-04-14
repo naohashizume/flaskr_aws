@@ -4,45 +4,27 @@
   git:
     clone: yes
     repo: "https://github.com/naohashizume/flaskr.git"
-    dest: /home/centos/flaskr
+    dest: "{{ flaskr_path }}"
     force: yes
 
 - name: Change ownership of flask app
   become: yes
   file:
-    path: /home/centos/flaskr
+    path: "{{ flaskr_path }}"
     state: directory
     recurse: yes
-    owner: centos
-    group: centos
+    owner: "{{ flaskr_user }}"
+    group: "{{ flaskr_user }}"
 
-    #- name: Create virtual environment
-    #become: yes
-    #command: python3 -m venv venv
-
-  #  become: yes
-  #args:
-  #chdir: /home/centos/flaskr
-
-  #- name: Activate venv
-  #become: yes
-  #command: . venv/bin/activate
-  #args:
-  #chdir: /home/centos/flaskr
 - name: Install requirements
   command: pip3 install -r requirements.txt
   become: yes
   args:
-    chdir: /home/centos/flaskr
+    chdir: "{{ flaskr_path }}"
 
 - name: Source environemnt
   become: yes
   shell: source /etc/environment
-
-# - name: Init db
-#   shell: flask init-db
-#   args:
-#     chdir: /home/centos/flaskr
 
 - name: Reload system
   become: yes

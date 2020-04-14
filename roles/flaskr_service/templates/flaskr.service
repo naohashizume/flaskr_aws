@@ -3,10 +3,9 @@ Description=Flaskr service
 After=network.target
 
 [Service]
-WorkingDirectory=/home/centos/flaskr
+WorkingDirectory={{ flaskr_path }}
 Type=simple
-User=centos
-Environment=FLASK_APP=flaskr
+User={{ flaskr_user }}
 ExecStartPre=/bin/bash -c 'flask init-db'
 ExecStart=/bin/bash -c 'flask run --host=0.0.0.0'
 Restart=always

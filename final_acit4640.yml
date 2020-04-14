@@ -9,6 +9,8 @@
   gather_facts: False
   vars:
     admin_user_name: admin
+    flaskr_user: centos
+    flaskr_path: /home/centos/flaskr
     flaskr_port: 5000
   roles:
     - flask
