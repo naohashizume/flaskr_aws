@@ -7,7 +7,7 @@ WorkingDirectory=/home/centos/flaskr
 Type=simple
 User=centos
 Environment=FLASK_APP=flaskr
-ExecStart=/bin/bash -c 'source /home/centos/flaskr/venv/bin/activate && flask run --host=0.0.0.0'
+ExecStart=/bin/bash -c 'flask run --host=0.0.0.0'
 Restart=always
 RestartSec=1
 

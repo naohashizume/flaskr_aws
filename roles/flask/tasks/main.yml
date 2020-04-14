@@ -7,20 +7,39 @@
     dest: /home/centos/flaskr
     force: yes
 
-- name: Create virtual environment
-  command: python3 -m venv venv
+- name: Change ownership of flask app
   become: yes
-  args:
-    chdir: /home/centos/flaskr
+  file:
+    path: /home/centos/flaskr
+    state: directory
+    recurse: yes
+    owner: centos
+    group: centos
+
+    #- name: Create virtual environment
+    #become: yes
+    #command: python3 -m venv venv
+  #  become: yes
+  #args:
+  #chdir: /home/centos/flaskr
+
+    #- name: Activate venv
+    #become: yes
+    #command: . venv/bin/activate
+    #args:
+    #chdir: /home/centos/flaskr
 
 - name: Install requirements
-  command: pip install -r requirements.txt
+  command: pip3 install -r requirements.txt
   become: yes
   args:
     chdir: /home/centos/flaskr
 
 - name: Export LC_ALL
-  shell: export LC_ALL=en_US.UTF-8
+  become: yes
+  lineinfile:
+    path: /etc/environment
+    line: export LC_ALL=en_US.UTF-8
 
 - name: Export FLASK_APP
   become: yes
@@ -36,12 +55,12 @@
     line: export FLASK_ENV=development
     create: yes
 
-- name:
+- name: Source environemnt
   become: yes
   shell: source /etc/environment
 
 - name: Init db
-  command: "flask init-db"
+  shell: flask init-db
   args:
     chdir: /home/centos/flaskr
 
@@ -59,3 +78,4 @@
   loop:
     - nginx
     - flaskr
+
