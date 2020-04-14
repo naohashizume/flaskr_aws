@@ -40,3 +40,21 @@
   loop:
     - nginx
     - flaskr
+
+- name: Gather info about status of services
+  service_facts:
+  register: ansible_facts.services
+  tags:
+    - info
+
+- name: Show flaskr service status
+  debug:
+    var: ansible_facts.services['flaskr.service']
+  tags:
+    - info
+
+- name: Show nginx service status
+  debug:
+    var: ansible_facts.services['nginx.service']
+  tags:
+    - info
